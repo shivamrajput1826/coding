@@ -1,0 +1,147 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <set>
+#include <map>
+#include <queue>
+#include<stack>
+#include <iostream>
+#include <sstream>
+#include <cstdio>
+#include <cmath>
+#include <ctime>
+#include <cstring>
+#include <cctype>
+#include <cassert>
+#include <limits>
+#include <functional>
+#include<unordered_map>
+#define rep(i,n) for(int (i)=0;(i)<(int)(n);++(i))
+#define rer(i,l,u) for(int (i)=(int)(l);(i)<(int)(u);++(i))
+#define reu(i,l,u) for(int (i)=(int)(l);(i)<(int)(u);++(i))
+
+#define aut(r,v) for(auto r:v)
+#define each(it,o) for(aut(it, (o).begin()); it != (o).end(); ++ it)
+#define all(o) (o).begin(), (o).end()
+#define pb(x) push_back(x)
+#define pc()  pop_back()
+#define ull unsigned long long
+
+#define mp(x,y) make_pair((x),(y))
+#define mset(m,v) memset(m,v,sizeof(m))
+#define INF 0x3f3f3f3f
+#define INFL 0x3f3f3f3f3f3f3f3fLL
+using namespace std;
+#define ll long long
+#define endl '\n'
+#define st stack<int>
+#define q queue<int>
+#define pq priority_queue<int>
+#define vl vector<long long>
+#define vi vector<int>
+#define vb vector<bool>
+#define vc vector<char>
+#define pii pair<int,int>
+#define mod 1000000007
+#define ss second
+#define ff first
+#define vpii vector<pii>
+#define vvi vector<vi>
+#define vs vector<string>
+#define un  unordered_map<int,int>
+#define mii map<int,int>
+#define Sort(a) sort(all(a))
+#define ED(a) Sort(a), a.erase(unique(all(a)), a.end())//removing all duplicates
+#define max3(a, b, c)   max(a, max(b, c))
+#define min3(a, b, c)   min(a, min(b, c))
+#define maxAll(a)       *max_element(all(a))
+#define minAll(a)       *min_element(all(a))
+#define allUpper(a)     transform(all(a), a.begin(), :: toupper)
+#define allLower(a)     transform(all(a), a.begin(), :: tolower)
+#define rev(a)          reverse(all(a))
+#define ub              upper_bound
+#define lb              lower_bound
+#define adv(a,n)        advance(auto it:a,n)
+#define RSort(a)         sort(a.rbegin(),a.rend()) //decending order
+#define cnt(v,a)             count(all(v),a)
+#define bs(v,a)           binary_search(all(v),a)
+#define mmax(v)           *max_element(all(v))
+#define mmin(v)           *min_element(all(v))
+#define popcount(mask)                       __builtin_popcount(mask) // count set bit
+#define popcountLL(mask)                     __builtin_popcountll(mask) // for long long
+#define X real() // useful for working with #include <complex> for computational geometry
+#define Y imag()
+#define gcd __gcd
+
+#define trace1(x)                           cerr << #x << ": " << x << endl;
+#define trace2(x, y)                        cerr << #x << ": " << x << " | " << #y << ": " << y << endl;
+#define trace3(x, y, z)                     cerr << #x << ": " << x << " | " << #y << ": " << y << " | " << #z << ": " << z << endl;
+#define trace4(a, b, c, d)                  cerr << #a << ": " << a << " | " << #b << ": " << b << " | " << #c << ": " << c << " | " << #d << ": " << d << endl;
+#define trace5(a, b, c, d, e)               cerr << #a << ": " << a << " | " << #b << ": " << b << " | " << #c << ": " << c << " | " << #d << ": " << d << " | " << #e << ": " << e << endl;
+#define trace6(a, b, c, d, e, f)            cerr << #a << ": " << a << " | " << #b << ": " << b << " | " << #c << ": " << c << " | " << #d << ": " << d << " | " << #e << ": " << e << " | " << #f << ": " << f << endl;
+
+
+inline int setbit(int mask, int pos) { return mask |= (1 << pos); }
+inline int resetbit(int mask, int pos) { return mask &= ~(1 << pos); }
+inline int togglebit(int mask, int pos) { return mask ^= (1 << pos); }
+inline bool checkbit(int mask, int pos) { return (bool)(mask & (1 << pos)); }
+bool Pow2(int n) {
+    return n && (!(n & (n - 1)));
+}
+const int MAX = 1e+4;
+int id[MAX], nodes, edges;
+
+pair<ll, pii> p[MAX];
+void initialize() {
+    rep(i, MAX) {
+        id[i] = i;
+        
+        
+    }
+}
+int root(int x)
+{
+    return x == id[x] ? x : id[x] = root(id[x]);
+}
+void uni(int x, int y,vi&rank) {
+    int p = root(x);
+    int qu= root(y);
+    if (rank[p] > rank[qu]) id[qu] = p;
+    else id[qu] = p;
+    if (rank[p] == rank[qu]) rank[qu]++;
+}
+ll krush(pair<ll, pii> p[],vi&rank) {
+    int x, y;
+    initialize();
+    ll cost, mincost = 0;
+    rep(i, edges) {
+        x = p[i].second.first;
+        y = p[i].second.second;
+        cost = p[i].first;
+        if (root(x) != root(y)) {
+            mincost += cost;
+            uni(x, y,rank);
+        }
+
+    }return mincost;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin >> nodes >> edges;
+    vi rank(MAX, 0);
+    rep(i, edges) {
+        int a, b;
+        ll w;
+        cin >> a >> b >> w;
+        p[i] = mp(w, mp(a, b));
+    }
+    cout << krush(p,rank);
+    
+
+}
+    
+
