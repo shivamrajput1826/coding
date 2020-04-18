@@ -1,0 +1,30 @@
+//in set->lower_bound=s.lower_bound(x);
+//else auto it=lower_bound(all(v),x);
+auto it1= lower_bound(all(v),x);
+if(it1==v.begin()) cout<<*it;
+else if(it1==v.end()){
+    		it1--;
+    		if(it1==v.begin()){
+    			cout<< *it1;
+    		}
+    		else{
+    			auto it3 = it1;
+    			it3--;
+    			if(abs(*it1-x)>abs(*it3-x)){
+    				cout<<*it3;
+    			}
+    			else{
+    				cout<<*it1;
+    			}
+    		}
+    	}
+    	else{
+    		auto it3 = it1;
+			it3--;
+			if(abs(*it1-x)>abs(*it3-x)){
+				cout<<*it3;
+			}
+			else{
+				cout<<*it1;
+			}
+    	}
