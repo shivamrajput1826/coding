@@ -1,0 +1,34 @@
+void bfs(int s, vb& vis, vvi& adj, vi &dis) {
+    vis[s] = true;
+    queue<int> qu;
+    qu.push(s);
+    while (!qu.empty()) {
+        int c = qu.front();
+        qu.pop();
+        aut(r, adj[c]) {
+            if (!vis[r]) {
+                qu.push(r);
+                dis[r] = dis[c] + 1;
+                vis[r] = true;
+            }
+        }
+    }
+
+}
+
+void dfs(int s, vi& str, vi& fin, vvi& adj,vb &vis,int &time) {
+    str[s] = time++;
+    vis[s] = true;
+    aut(r, adj[s]) {
+        if (!vis[r]) {
+            vis[r] = true;
+            dfs(r, str, fin, adj, vis, time);
+
+        }
+    }fin[s] = time;
+}
+// if(fin[i]-str[i]==1) then it is a root noode;
+//its an adjacency list implementation of an  graph
+rep(i,edges){
+adj[a].push_back(b);
+adj[b].push_back(a);
