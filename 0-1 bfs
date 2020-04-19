@@ -1,0 +1,48 @@
+void short_bfs(int s,vector<pii>* adj, vi& d, vb& vis) {
+    d[s] = 0;
+    
+    deque<int> dq;
+   dq.push_front(s);
+   while (!dq.empty()) {
+       int t = dq.front();
+       dq.pop_front();
+       aut(r, adj[t]) {
+           int l = r.ff;
+           int m = r.ss;
+           d[l] = min(d[l], d[t] + m);
+           if (m == 1) dq.push_back(l);
+           else dq.push_front(l);
+
+       }
+   }
+
+}
+
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    int n, k;
+    cin >> n >> k;
+    vector<pair<int,int>> adj[100];
+    rep(i, n - 1) {
+        int a, b,w;
+        cin >> a >> b>>w;
+        adj[a].push_back({ b,w });
+        adj[b].push_back({ a,w });
+
+       
+    }
+    vi d(n, INF);
+    vb vis(n, false);
+    int s;
+    cin >> s;
+    short_bfs(s,adj, d, vis);
+    aut(r, d) cout << r << " ";
+    cout << endl;
+
+
+   
+
+}// if(n,m) table u have to traverse form one row to another row and such that there are some obstacles which may bind to follow another path;
