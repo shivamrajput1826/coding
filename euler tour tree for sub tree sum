@@ -1,0 +1,84 @@
+void euler(int s, vi& et, vvi& adj, vb& vis) {
+    vis[s] = true;
+
+    aut(r, adj[s]) {
+        if (!vis[r]) et.pb(r), euler(r, et, adj, vis);
+
+        
+    }
+    et.pb(s);
+}
+/*9 8
+1 2
+1 3
+1 4
+1 5
+2 6
+4 7
+4 8
+4 9
+2 3 5 3 1
+4 4 3 1*/
+
+
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    int nodes, edges;
+    cin >> nodes >> edges;
+    vvi adj(nodes+1);
+    rep(i, nodes - 1) {
+        int a, b;
+        cin >> a >> b;
+        adj[a].pb(b);
+        adj[b].pb(a);
+    }
+    
+    vi v(nodes);
+    rep(i, nodes) cin >> v[i];
+    vi et;
+    et.pb(1);
+    vb vis(nodes + 1, false);
+    euler(1,et, adj,vis);
+    aut(r, et) cout << r << " ";
+    cout << endl;
+    
+    vpii ans;
+    int l = et.size();
+    vb vis1(nodes+1, false);
+    for (int i = 0; i < l;i++) {
+        if (!vis1[et[i]]) {
+            ans.push_back({ et[i],v[et[i] - 1] });
+            vis1[et[i]] = true;
+        }
+        else ans.push_back({ et[i],0 });
+            
+        
+    }
+    aut(r, ans) cout << r.ff << r.ss << endl;
+    
+    vi anssum;
+    vb vis2(nodes + 1, false);
+ 
+    
+    for (int i = 1; i <= nodes; i++) {
+        int sum = 0;
+        int j;
+        for (j = 0; j < l; j++) {
+            if (et[j] == i) { trace1(j); break; }
+        }
+        sum += ans[j].ss;
+        trace1(sum);
+        j++; trace1(j);
+        while (et[j] != i) {
+            sum += ans[j].ss;
+            trace1(sum);
+            j++;
+        }
+        anssum.push_back(sum);
+    }
+    aut(r, anssum) cout << r << endl;
+}
