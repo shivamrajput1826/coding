@@ -1,0 +1,5 @@
+Priority Queue is similar to queue where we insert an element from the back and remove an element from front, but with a one difference
+that the logical order of elements in the priority queue depends on the priority of the elements. The element with highest priority will be
+moved to the front of the queue and one with lowest priority will move to the back of the queue. Thus it is possible that when you enqueue
+an element at the back in the queue, it can move to front because of its highest priority.
+
