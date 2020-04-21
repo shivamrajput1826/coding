@@ -1,0 +1,42 @@
+Access bit (public member function )
+count Count bits set (public member function )
+size Return size (public member function )
+test Return bit value (public member function )
+any Test if any bit is set (public member function )
+none Test if no bit is set (public member function )
+all  Test if all bits are set (public member function )
+
+Bit operations
+set Set bits (public member function )
+reset Reset bits (public member function )
+flip Flip bits (public member function )
+
+Bitset operations 
+to_string Convert to string (public member function )
+to_ulong Convert to unsigned long integer (public member function )
+to_ullong  Convert to unsigned long long (public member function )
+
+Non-member function overloads
+applicable operators
+Bitset operators (function )
+
+Non-member class specializations
+hash<bitset> 
+Hash for bitset (class template specialization )
+
+binary to decimal
+bitset<8> b(100)
+
+ What is the first set bit.I asked M.Mahdi and he told me about bs._Find_first(). for example:
+bitset<17>BS;
+BS[1] = BS[7] = 1;
+cout<<BS._Find_first()<<endl; // prints 1
+
+After more research , we found bs._Find_next(idx). This function returns first set bit after index idx.for example:
+bitset<17>BS;
+BS[1] = BS[7] = 1;
+cout<<BS._Find_next(1)<<','<<BS._Find_next(3)<<endl; // prints 7,7
+
+So this code will print all of the set bits of BS:
+for(int i=BS._Find_first();i< BS.size();i = BS._Find_next(i))
+    cout<<i<<endl;
