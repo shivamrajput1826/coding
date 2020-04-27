@@ -1,0 +1,498 @@
+
+//NUMBER THEORY------------------------------------------------------
+//factorisation
+template<typename T>vector<T> factorize(T a) { vector<T>vec; T sz = sqrt(a); for (T i = 2; i <= sz; i++)while (a % i == 0) { a /= i; vec.push_back(i); }if (a > 1)vec.push_back(a); return vec; }
+//gcd tc=O(log(min(a,b))) a and b are non-negative so always use gcd(abs(a),abs(b))
+template <typename T> T gcd(T a, T b) { return b ? gcd(b, a % b) :a; }
+//lcm
+template <typename T> T lcm(T a, T b) { return (a / gcd(a, b)) * b; }
+//______________
+
+
+//prime
+//seive simple
+void seive(int n) {
+    vb prime(n / 2, false); for (int i = 3; i * i < n; i += 2) { if (prime[i / 2] == false) { for (int j = i * i; j < n; j += i * 2) prime[j / 2] = true; } }
+}
+//segmented seive+seive
+//void simpleSieve(int limit, vector<int>& prime) { vb mark(limit + 1, false);   for (int i = 2; i <= limit; ++i) { if (mark[i] == false) { prime.push_back(i); for (int j = i; j <= limit; j += i) mark[j] = true; } } }
+//void primes(int low, int high, vector<int>& x, map<int, int>& mp) { int limit = (int)floor(sqrt(high)) + 1; vector<int> prime; simpleSieve(limit, prime); int n = high - low + 1;  vb mark(n + 1, false);  for (int i = 0; i < prime.size(); i++) { int loLim = floor(low / prime[i]) * prime[i]; if (loLim < low) loLim += prime[i]; if (loLim == prime[i])   loLim += prime[i]; for (int j = loLim; j <= high; j += prime[i]) mark[j - low] = true; } for (int i = low; i <= high; i++) if (!mark[i - low]) { x.push_back(i); mp[i] = 1; }mp[1] = 0; }
+
+
+//____________________________________________________________________
+
+template <typename T> T modu(T a, T b) { return (a < b ? a : a % b); }
+template<typename T> T mod_neg(T a, T b) { a = modu(a, b); if (a < 0) { a += b; } return a; }
+template <typename T>T power(T e, T n, T m) { T x = 1, p = e; while (n) { if (n & 1)x = modu(x * p, m); p = modu(p * p, m); n >>= 1; } return x; }
+//extended euclid for modular multiplicative inverse
+int d, x, y;
+void extendedEuclid(int A, int B) {
+    if (B == 0) {
+        d = A;
+        x = 1;
+        y = 0;
+    }
+    else {
+        extendedEuclid(B, A % B);
+        int temp = x;
+        x = y;
+        y = temp - (A / B) * y;
+    }
+}
+int modInverse(int A, int M)
+{
+    extendedEuclid(A, M);
+    return (x % M + M) % M;    //x may be negative
+}
+
+//if(M==Prime)
+//exp(A,M-2,M) would be the answer
+
+//____________________________________
+//exponentiation TC=O(logn)
+ll exp(ll x, ll n)
+{
+    if (n == 0) return 1;
+    if (n == 1) return x;
+    if (n % 2 == 0) return exp((x * x) % mod, n / 2);
+    if (n % 2 == 1) return (x * exp((x * x) % mod, n / 2)) % mod;
+}
+//rabin miller(for Prime)
+ll mulmod(ll a, ll b, ll c)
+{
+    ll x = 0, y = a % c;
+    while (b > 0)
+    {
+        if (b % 2) x = (x + y) % c;
+        y = (y * 2) % c;
+        b /= 2;
+    }
+    return x % c;
+}
+ll modulo(ll a, ll b, ll c)
+{
+    ll x = 1, y = a % c;
+    while (b > 0)
+    {
+        if (b % 2) x = mulmod(x, y, c);
+        y = mulmod(y, y, c);
+        b /= 2;
+    }
+    return x % c;
+}
+
+bool miller_rabin(ll p, ll iteration)
+{
+    if (p < 2) return false;
+    if (p % 2 == 0 && p != 2) return false;
+
+    ll s = p - 1;
+    while (s % 2 == 0) s /= 2;
+
+    for (ll i = 1; i <= iteration; i++)
+    {
+        ll a = rand() % (p - 1) + 1, temp = s;
+
+        ll modo = modulo(a, temp, p);
+        while (mod != 1 && modo != p - 1 && temp != p - 1)
+        {
+            modo = mulmod(modo, modo, p);
+            temp *= 2;
+        }
+        if (temp % 2 == 0 && modo != p - 1) return false;
+    }
+    return true;
+}
+
+//euler function TC(O(nloglogn))
+void phi_1_to_n(int n) {
+    vector<int> phi(n + 1);
+    phi[0] = 0;
+    phi[1] = 1;
+    for (int i = 2; i <= n; i++)
+        phi[i] = i;
+
+    for (int i = 2; i <= n; i++) {
+        if (phi[i] == i) {
+            for (int j = i; j <= n; j += i)
+                phi[j] -= phi[j] / i;
+        }
+    }
+}
+//Sum of euler functions of divisors give the number itself
+//(x^n)mod m=(x^(phi(m)+(n%phi(m)))%m
+//if n==prime, phi(n)=n-1;
+//a).phi(p) = p - 1. Where p is prime.All the numbers from 1 to p - 1 are coprime to p.
+//b).phi(a* b) = phi(a) * phi(b) where a and b are coprime.
+//c).phi(p^ k) = p ^ k - p ^ (k - 1).Note that here ^ denotes power.Here all the numbers from 1 to p ^ k are coprime to p ^ k except all the multiples of p, which are exactly p ^ (k - 1).
+
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------
+
+//ARRAY______________________________________________________________________________________
+//sumarray
+template<typename T> vector<ll>sumarray(vector<ll>& v) { vl sum(v.size()); sum[0] = v[0]; reu(i, 1, v.size()) { sum[i] = sum[i - 1] + v[i]; } return sum; }
+
+//get nearest element to a particular number
+void getnearest(vi& v, int x) {
+    auto it1 = lower_bound(all(v), x); if (it1 == v.begin()) cout << *it1; else if (it1 == v.end()) { it1--; cout << *it1; }else {auto it3 = it1; it3--; if (abs(*it1 - x) > abs(*it3 - x)) { cout << *it3; }else { cout << *it1; }}}
+
+
+//Kadane algorithms
+int kadane(vi& array) {
+    int t = array.size();
+    int best = 0; int sum = 0; for (int i = 0; i < t; i++) { sum = max(array[i], array[i] + sum); best = max(best, sum); }return best;
+}
+
+//reverse number
+template<typename T> T revnum(T a) { T res = 0;    while (a) { res *= 10;        res += a % 10;        a /= 10; }    return res; }
+
+//------------------------------------------------------------------------------------------------------------------------- 
+
+//graph_________________________________________________________________________________________________________
+//bfs
+void bfs(int s, vb& vis, vvi& adj, vi& dis) {
+    vis[s] = true;
+    queue<int> qu;
+    qu.push(s);
+    while (!qu.empty()) {
+        int c = qu.front();
+        qu.pop();
+        aut(r, adj[c]) {
+            if (!vis[r]) {
+                qu.push(r);
+                dis[r] = dis[c] + 1;
+                vis[r] = true;
+            }
+        }
+    }
+
+}
+//dfs with start and end timing
+void dfs(int s, vi& str, vi& fin, vvi& adj, vb& vis, int& time) {
+    str[s] = time++;
+    vis[s] = true;
+    aut(r, adj[s]) {
+        if (!vis[r]) {
+            vis[r] = true;
+            dfs(r, str, fin, adj, vis, time);
+
+        }
+    }fin[s] = time;
+}
+
+//get no of nodes
+void numberOfNodes(vector<ll>adj[], vi &count1, ll s, ll e)
+{
+    vector<ll>::iterator u;
+    count1[s] = 1;
+    for (u = adj[s].begin(); u != adj[s].end(); u++) {
+
+        // condition to omit reverse path 
+        // path from children to parent 
+        if (*u == e)
+            continue;
+
+        // recursive call for DFS 
+        numberOfNodes(adj, count1, *u, s);
+
+        // update count[] value of parent using  
+        // its children 
+        count1[s] += count1[*u];
+    }
+}
+//-----------------------------------------------------------------------------------------------------------------------------------
+
+
+//BINARY SEARCH___________________________________________________________________-
+ll binarySearch(vector<ll> arr, ll l, ll r, ll x)
+{
+    if (r >= l) {
+        ll mid = l + (r - l) / 2;
+
+        // If the element is present at the middle 
+        // itself 
+        if (arr[mid] == x)
+            return mid;
+
+        // If element is smaller than mid, then 
+        // it can only be present in left subarray 
+        if (arr[mid] > x)
+            return binarySearch(arr, l, mid - 1, x);
+
+        // Else the element can only be present 
+        // in right subarray 
+        return binarySearch(arr, mid + 1, r, x);
+    }
+
+    // We reach here when element is not 
+    // present in array 
+    return -1;
+}
+//Tree---------------------------------------------------------------------
+class TreeNode {
+public:
+    ll val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(ll v) {
+        val = v;
+        left = right = NULL;
+    }
+};
+//----------------------------------------------------------------------------------
+
+
+//SEGMENT TREES---------------------------------------------------------------------------------------------
+int segt[2000000+10];
+int lazy[2000000+10];
+//building a segment tree
+void build(int v[],int node,int s,int e)
+{
+    if(s==e)
+    {
+        segt[node]=v[s];
+    }
+    else
+    {
+        int m=(s+e)/2;
+        build(v,2*node,s,m);
+        build(v,2*node+1,m+1,e);
+        segt[node]=segt[2*node]+segt[2*node+1];
+    }
+}
+//uodating a segment tree
+void update(int node,int s,int e,int idx,int val)
+{
+    if(s==e)
+    {
+        segt[node]=val;
+    }
+    else
+    {
+        int m=(s+e)/2;
+        if(s<=idx&&idx<=m)
+        {
+            update(2*node,s,m,idx,val);
+        }
+        else
+        {
+            update(2*node+1,m+1,e,idx,val);
+        }
+        segt[node]=segt[2*node]+segt[2*node+1];
+    }
+}
+int query(int node,int s,int e,int l,int r)
+{
+    if(r<s||e<l)
+    {
+        return 0;
+    }
+    if(l<=s&&e<=r)
+    {
+        return segt[node];
+    }
+    int m=(s+e)/2;
+    int p1=query(2*node,s,m,l,r);
+    int p2=query(2*node+1,m+1,e,l,r);
+    return (p1+p2);
+}
+void updaterange(int node, int start, int end, int l, int r, int val)
+{
+    if(lazy[node] != 0)
+    {
+        segt[node] += (end - start + 1) * lazy[node];    // Update it
+        if(start != end)
+        {
+            lazy[node*2] += lazy[node];                  // Mark child as lazy
+            lazy[node*2+1] += lazy[node];                // Mark child as lazy
+        }
+        lazy[node] = 0;                                  // Reset it
+    }
+    if(start > end or start > r or end < l)              // Current segment is not within range [l, r]
+        return;
+    if(start >= l and end <= r)
+    {
+        // Segment is fully within range
+        segt[node] += (end - start + 1) * val;
+        if(start != end)
+        {
+            // Not leaf node
+            lazy[node*2] += val;
+            lazy[node*2+1] += val;
+        }
+        return;
+    }
+    int mid = (start + end) / 2;
+    updaterange(node*2, start, mid, l, r, val);        // Updating left child
+    updaterange(node*2 + 1, mid + 1, end, l, r, val);   // Updating right child
+    segt[node] = segt[node*2] + segt[node*2+1];        // Updating root with max value
+}
+
+int queryrange(int node, int start, int end, int l, int r)
+{
+    if(start > end or start > r or end < l)
+        return 0;         // Out of range
+    if(lazy[node] != 0)
+    {
+        // This node needs to be updated
+        segt[node] += (end - start + 1) * lazy[node];            // Update it
+        if(start != end)
+        {
+            lazy[node*2] += lazy[node];         // Mark child as lazy
+            lazy[node*2+1] += lazy[node];    // Mark child as lazy
+        }
+        lazy[node] = 0;                 // Reset it
+    }
+    if(start >= l and end <= r)             // Current segment is totally within range [l, r]
+        return segt[node];
+    int mid = (start + end) / 2;
+    int p1 = queryrange(node*2, start, mid, l, r);         // Query left child
+    int p2 = queryrange(node*2 + 1, mid + 1, end, l, r); // Query right child
+    return (p1 + p2);
+}
+
+//void build(int v[],int node,int s,int e)//put node=1;s=1;e=1 for 1 indexed and node=1;s=0;e=n-1 for 0 indexed//always provide array here instead of vector.
+//void update(int node,int s,int e,int idx,int val)//put node=1;s=1;e=1;idx=index;val=value for 1 indexed and node=1;s=0;e=0;idx=index;val=value for 0 indexed
+//int query(int node,int s,int e,int l,int r)// put node=1;s=1;e=n ans l and r for 1 indexed put node=1;s=0;e=n-1 ans l and r for 1 indexed
+
+//-----------------------------------------------------------------------------------------------
+
+
+//Combinatrics----------------------------
+int modinv(int k) { return power(k, mod - 2, mod); }
+const int MXX = 1e5 + 69;
+int fact[MXX], invfact[MXX];
+void combinatorics() { fact[0] = fact[1] = 1; for (int i = 2; i < MXX; i++) { fact[i] = fact[i - 1] * i; fact[i] %= mod; }invfact[MXX - 1] = modinv(fact[MXX - 1]); for (int i = MXX - 2; i >= 0; i--) { invfact[i] = invfact[i + 1] * (i + 1); invfact[i] %= mod; } }
+int nCr(int x, int y) { if (y > x)return 0; int num = fact[x]; num *= invfact[y]; num %= mod; num *= invfact[x - y]; num %= mod; return num; }
+//_______________________________________________________________________________
+
+//BINARY INDEX TRESS---------------------------------------------------------------------------------------------
+class BIT {      //For prefix range queries
+    ll* tree;
+    ll maxn;
+    ll(*func)(ll, ll);
+public:
+    void update(ll index, ll val) {
+        while (index <= maxn) {
+            tree[index] = (*func)(tree[index], val);
+            index += (index & (-index));
+        }
+    }
+    ll query(ll index) {
+        ll ans = 0;
+        while (index > 0) {
+            ans = (*func)(ans, tree[index]);
+            index -= (index & (-index));
+        }
+        return ans;
+    }
+    BIT(ll* arr, ll n, ll(*f)(ll, ll)) {
+        tree = new ll[n + 1]();
+        maxn = n;
+        func = f;
+        reu(i, 1, n + 1)   update(i, arr[i - 1]);
+    }
+};
+//______________________________________________________________________________________
+
+//DSU--------------------------------------------------------
+struct DSU {
+    vector<int> par, sz; DSU(int n) { par.resize(n); sz.resize(n); for (int i = 0; i < n; i++)par[i] = i, sz[i] = 1; }
+    int find(int x) { if (x == par[x])return x; else return (par[x] = find(par[x])); }
+    void Unite(int x, int y) { x = find(x); y = find(y); if (x == y)return; if (sz[x] < sz[y])swap(x, y); sz[x] += sz[y]; par[y] = x; }
+    bool Same(int x, int y) { return find(x) == find(y); }int size(int x) { return sz[find(x)]; }
+};
+//__________________________________________________________________________________________
+/*
+        * Sets
+            * begin() - returns an iterator to first element of set
+            * end() - Returns an iterator to the theoretical element that follows last element in the set.
+            * size() - Returns the number of elements in the set.
+            * max_size() - Returns the maximum number of elements that the set can hold.
+            * empty() - Returns whether the set is empty.
+            * find(x) - Returns an iterator to the element ‘x’ in the set if found, else returns the iterator to end.
+            * erase(x)– Removes the value ‘x’ from the set.
+            * count(x) - Returns 1 or 0 based on the element ‘x’ is present in the set or not.
+            * lower_bound(x) – Returns an iterator to the first element that is equivalent to ‘x’ or
+                               definitely will not go before the element ‘x’ in the set.
+            * Return reverse iterator to reverse beginning: (s.rbegin())
+            * Set to be sorted in decreasing order: set<int, greater<int> >
+            * s.count(x) : check if an element exists in a set #returns 0 or 1 accordingly
+            * emplace() : If the function successfully inserts the element (because no
+                    equivalent element existed already in the set), the function returns a
+                    pair of an iterator to the newly inserted element and a value of true.
+            * const bool is_in = s.find(x) != s.end(); check if an element is in the set.
+            * myset.erase(x) #directly by value. logarithmic complexity
+            * myset.erase(iteratortoanelement,s.end())
+            * for_each(all(s),do_something);
+            * set<int> :: iterator it = myset.find(60);
+
+        * Vectors
+            * begin() - Returns an iterator pointing to the first element in the vector
+            * end() - Returns an iterator pointing to the theoretical element that follows the last element in the vector
+            * rbegin() - Returns a reverse iterator pointing to the last element in the vector (reverse beginning).
+            * rend() - Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector
+            * cbegin(),cend(),crbegin(),crend()
+            * size() - Returns the number of elements in the vector.
+            * max_size() -  Returns the maximum number of elements that the vector can hold.
+            * capacity() - Returns the size of the storage space currently allocated to the vector expressed as number of elements.
+            * resize() - Resizes the container so that it contains ‘n’ elements.
+            * empty() - Returns whether the container is empty.
+            * shrink_to_fit() - Reduces the capacity of the container to fit its size and destroys all elements beyond the capacity.
+            * reserve() - Requests that the vector capacity be at least enough to contain n elements.
+            * [i] - Returns a reference to the element at position ‘i’ in the vector
+            * at(i) - Returns a reference to the element at position ‘i’ in the vector
+            * front() - Returns a reference to the first element in the vector
+            * back() - Returns a reference to the last element in the vector
+            * data() - Returns a direct pointer to the memory array used internally by the vector to store its owned elements.
+            * assign() - It assigns new value to the vector elements by replacing old ones
+            * push_back() - It push the elements into a vector from the back
+            * pop_back() - It is used to pop or remove elements from a vector from the back.
+            * insert() - It inserts new elements before the element at the specified position
+            * erase() - It is used to remove elements from a container from the specified position or range
+            * swap() - It is used to swap the contents of one vector with another vector of same type. Sizes may differ.
+            * clear() - It is used to remove all the elements of the vector container
+            * emplace() - It extends the container by inserting new element at position
+            * emplace_back() - It is used to insert a new element into the vector container, the new element is added to the end of the vector
+            * for (auto it = myvector.begin(); it != myvector.end(); ++it)
+
+        * Queue
+            * empty() - Returns whether the queue is empty.
+            * size() - Returns the size of the queue.
+            * emplace() - Insert a new element into the queue container, the new element is added to the end of the queue.
+            * front() - front() function returns a reference to the first element of the queue.
+            * back() - returns a reference to the last element of the queue.
+            * push(x) - adds the element ‘x’ at the end of the queue
+            * pop() - deletes the first element of the queue
+
+        * Priority_Queue
+            * priority_queue <int, vector<int>, greater<int>>
+            * empty() - returns whether the queue is empty.
+            * size() -  returns the size of the queue.
+            * top() -  Returns a reference to the top most element of the queue
+            * push(x) - adds the element ‘x’ at the end of the queue.
+            * pop() -  deletes the first element of the queue.
+            * swap() -  swap the contents of one priority queue with another priority queue of same type and size.
+            * emplace() - insert a new element into the priority queue container, the new element is added to the top of the priority queue.
+
+        * Deque
+            Double ended queues are sequence containers with the feature of expansion and contraction on both the ends.
+            They are similar to vectors, but are more efficient in case of insertion and deletion of elements.
+            Unlike vectors, contiguous storage allocation may not be guaranteed.
+            * insert()
+            * rbegin()
+            * rend()
+            * assign()
+            * resize()
+            * push_front()
+            * push_back()
+            * pop_front()
+            * pop_back()
+            * front()
+            * back()
+*/
