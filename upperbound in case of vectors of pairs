@@ -1,0 +1,19 @@
+How can i call lower_bound on pair<int,int> to get the last occurence of pair if element is repeating ?
+
+For eg :
+
+[7,1,5,3,1,1]
+
+[ {1,1,} , {1,4} , {1,5}, {3,3}, {5,2}, {7,0} ]
+
+if i do lower_bound for should get pair {1,5}
+try auto it = st. upper_bound({first+1,-inf})
+if(it == st.begin()) element not found
+else element in it--
+
+
+
+I search it in google , but i can't find it. Can somebody tell me how to use lower_bound in set<pair<int,int>> , so i can find the fist
+pair whose first element is not small than the element i search for ?
+x.lower_bound({first, -inf});
+x.upper_bound({first, inf});
